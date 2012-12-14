@@ -1,4 +1,6 @@
-(ql:quickload '(:iterate :cl-libxml2 :drakma :cl-ppcre :cl-json))
+;;; dno.lisp
+
+(in-package #:dno)
 
 ;;------------------------------------------------------------------------------
 ;; UTILITY FUNCTIONS BEGIN
