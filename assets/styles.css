@@ -1,0 +1,15 @@
+#container {
+    min-width: 1800px;
+    height:900px;
+    margin:0 auto;
+}
+
+#loading-header {
+    text-align: center;
+    font: 110%/1.1em Helvetica,Arial,sans-serif;
+}
+
+#loading-icon {
+    display: block;
+    margin: 0 auto;
+}

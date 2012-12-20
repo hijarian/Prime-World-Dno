@@ -2,25 +2,6 @@
 
 (in-package #:dno)
 
-;;------------------------------------------------------------------------------
-;; UTILITY FUNCTIONS BEGIN
-(defun map-on-node-by-xpath (node xpath functor)
-  "Apply functor to every node gotten by xpath on the node given"
-  (iterate:iter (iterate:for subnode 
-                             in-xpath-result 
-                             xpath
-                             on node)
-                (iterate:collect (funcall functor subnode))))
-
-(defun map-on-xpath (html xpath functor)
-  "Map functor onto all nodes matched by xpath in given html text"
-  (html:with-parse-html (document html)
-    (map-on-node-by-xpath document xpath functor)))
-
-;; UTILITY FUNCTIONS END
-;;------------------------------------------------------------------------------
-
-
 (defparameter *ratings-xpath* 
   "//div[@class='b-ratinglist__i2']/div[contains(concat(' ', @class, ' '), ' b-ratings ')]")
 
@@ -46,10 +27,6 @@
   "From the raw HTML text gets ratings list"
   (map-on-xpath html-page *ratings-xpath* #'get-ratings-for-hero))
 
-(defun write-ratings-str-to-file (ratings-str outfile)
-  (with-open-file (output (merge-pathnames outfile) :direction :output :if-exists :supersede :if-does-not-exist :create)
-    (write-line ratings-str output)))
-
 
 ;; MAIN 
 (defun get-ratings-page ()
@@ -58,10 +35,19 @@
 (defun ratings-to-json (ratings)
   (json:encode-json-to-string ratings))
 
-(defun run ()
-  "Main entry point"
-  (let ((page (get-ratings-page))
-        (outfile "ratings.json"))
+(defun send-data-from-origin-as-json ()
+  (let ((page (get-ratings-page)))
+    (ratings-to-json (collect-ratings page))))
+
+
+;;; WRITING TO FILE
+(defun write-ratings-str-to-file (ratings-str outfile)
+  (with-open-file (output (merge-pathnames outfile) :direction :output :if-exists :supersede :if-does-not-exist :create)
+    (write-line ratings-str output)))
+
+(defun write-ratings-to-file (outfile)
+  "Auxiliary function to debug"
+  (let ((page (get-ratings-page)))
     (write-ratings-str-to-file 
      (ratings-to-json (collect-ratings page))
      outfile)))
