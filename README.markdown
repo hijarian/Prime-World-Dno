@@ -5,29 +5,29 @@
 Сканирует [веб-страницу рейтингов](http://ru.playpw.com/ratings.html) и собирает с неё данные в более-менее структурированном формате.
 
 # Зачем надо
-Если судить по рейтингам, представленным на сайте, становится заметно, что у некоторых персонажей топ-25 находится в пределах, скажем, 1600-1700 рейтинга, а у некоторых может доходить до 2400-2700.
-Отсюда можно сделать весьма интересный вывод, что персонажи, у которых диапазон топ-25 меньше других --- неиграбельные («дно»).
+Если судить по рейтингам, представленным на сайте, становится заметно, что у некоторых персонажей топ-25 находится в пределах, скажем, 1700-1900 рейтинга, а у некоторых может доходить до 1900-2500.
+Отсюда можно сделать весьма интересный вывод, что персонажи, у которых диапазон топ-25 меньше других — неиграбельные («дно»).
 Данная прога должна помочь визуализировать это различие, построив графики рейтинга для всех персонажей.
 
 # Как запускать локально
 Сразу предупреждаю: проверялось только в Debian Wheezy.
 
-    1. Ставим SBCL и Quicklisp.
-    2. Добавляем в подкаталог `local-projects` в папке Quicklisp'а симлинк на _эту_ папку (содержащую исходники pw-dno).
-    3. Запускаем в _этой_ папке SBCL.
-    4. В SBCL выполняем команду `(load "runner.lisp")`.
-    5. Открываем в браузере URL http://localhost:4242/
+1. Ставим SBCL и Quicklisp.
+2. Добавляем в подкаталог `local-projects` в папке Quicklisp'а симлинк на _эту_ папку (содержащую исходники pw-dno).
+3. Запускаем в _этой_ папке SBCL.
+4. В SBCL выполняем команду `(load "runner.lisp")`.
+5. Открываем в браузере URL http://localhost:4242/
 
 # Как хостить на Heroku
 
-    1. [Настраиваем у себя подключение к Heroku](https://devcenter.heroku.com/articles/quickstart).
-    2. `heroku create -s cedar --buildpack http://github.com/jsmpereira/heroku-buildpack-cl.git`. Запоминаем название проги, которое Heroku нам сгенерировало.
-    3. `heroku labs:enable user-env-compile -a myapp`, вместо myapp пишем название проги из п.2.
-    4. `heroku config:add CL_IMPL=sbcl`
-    5. `heroku config:add CL_WEBSERVER=hunchentoot`
-    6. `heroku config:add LANG=en_US.UTF-8`
-    7. `git push heroku master`
-    8. `heroku open`. Эта команда [откроет приложение в браузере](http://pw-dno.herokuapps.com/).
+1. [Настраиваем у себя подключение к Heroku](https://devcenter.heroku.com/articles/quickstart).
+2. `heroku create -s cedar --buildpack http://github.com/jsmpereira/heroku-buildpack-cl.git`. Запоминаем название проги, которое Heroku нам сгенерировало.
+3. `heroku labs:enable user-env-compile -a myapp`, вместо myapp пишем название проги из п.2.
+4. `heroku config:add CL_IMPL=sbcl`
+5. `heroku config:add CL_WEBSERVER=hunchentoot`
+6. `heroku config:add LANG=en_US.UTF-8`
+7. `git push heroku master`
+8. `heroku open`. Эта команда [откроет приложение в браузере](http://pw-dno.herokuapps.com/).
 
 ## Статус
 
