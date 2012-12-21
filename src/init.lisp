@@ -15,8 +15,8 @@
       (:link :rel "stylesheet" :href "/assets/styles.css"))
      (:body
       (:div :id "container"
-            (:img :id "loading-icon" :src "/assets/loading.gif"))
-            (:h1 :id "loading-header" "Загрузка данных...")
+            (:img :id "loading-icon" :src "/assets/loading.gif")
+            (:h1 :id "loading-header" "Загрузка данных..."))
       (:script :src "/assets/scripts.js")))))
 
 (hunchentoot:define-easy-handler (data :uri "/data") ()
