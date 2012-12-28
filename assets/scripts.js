@@ -4,21 +4,46 @@ $(function () {
         dataType: "json",
         success: function (data) {
             makeChartWithData(data);
+            fillRatingsTable(data);
+            $('.pages-toggler-wrapper').show();
         },
         error: function () {
             alert("Непонятная ошибка загрузки данных!");
         }
     });
+    $('.pages-toggler-wrapper').on('click', '.pages-toggler', function (event) {
+        $('.page').fadeOut('fast');
+        var target_selector = '#' + $(this).data('target');
+        $(target_selector).fadeIn('fast');
+    });
 });
+
+function fillRatingsTable(data) {
+    var table = $('#meanvalues-list');
+    var table_contents = '<tbody>';
+    
+    for (var i = 0; i < data.length; ++i) {
+        var hero_name = data[i].name;
+        var hero_mean_rating = data[i].mean;
+        var hero_corrected_mean_rating = data[i]["mean-last"];
+        table_contents += '<tr><td>' + hero_name + '</td><td>' + hero_mean_rating + '</td><td>' + hero_corrected_mean_rating + '</td></tr>';
+    }
+    
+    table_contents += '</tbody>';
+
+    table.append(table_contents);
+    table.dataTable();
+}
+
 
 function makeChartWithData (data) {
     new Highcharts.Chart({
 	chart:{
 	    renderTo:'container',
-	    type:'line',
-	    marginRight:130,
 	    marginBottom:25,
-	    zoomType: 'xy'
+	    zoomType: 'xy',
+            ignoreHiddenSeries: false,
+            reflow: false
 	},
 	title:{
 	    text:'Кто дно?'
@@ -37,16 +62,18 @@ function makeChartWithData (data) {
 	    }]
 	},
 	tooltip:{
+            shared: false,
 	    formatter: function () {
 		return '<b>' + this.series.name + '</b><br/>'
 		    + this.x + ' место: ' + this.y + ' очков.';
 	    }
 	},
 	legend:{
+            enabled: true,
 	    layout:'vertical',
 	    align:'right',
 	    verticalAlign:'top',
-	    y: 100
+	    y: 100,
 	},
 	series: data
     });

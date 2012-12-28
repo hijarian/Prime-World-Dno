@@ -87,13 +87,36 @@
    (cons "x"    (parse-integer (xpath:find-string subnode "./b")))
    (cons "y"    (parse-integer (remove-if-not #'alphanumericp (xpath:find-string subnode "./span"))))))
 
+(defun get-field-from-point (field-name point-definition)
+  (cdr (assoc field-name point-definition))) 
+
+(defun get-y-field-from-point (point-definition)
+  (get-field-from-point "y" point-definition))
+
+(defun list-average (data)
+  "Calculate average value for a list of numbers"
+  (let ((elements-count (length data))
+        (elements-sum (reduce #'+ data)))
+    (coerce (/ elements-sum elements-count) 'float)))
+  
+(defun calculate-mean (data)
+  "Calculate average between the every y field from the given alist"
+  (let ((elements (mapcar #'get-y-field-from-point data)))
+    (list-average elements)))
+
+(defun calculate-mean-for-last (items-number data)
+  (calculate-mean (last data items-number)))
+
 (defun get-ratings-for-hero (node)
   "Accepts the DOM element with data about all ratings for a given hero"
-  (let ((hero-class (get-hero-class node)))
+  (let ((hero-class (get-hero-class node))
+        (data-items (map-on-node-by-xpath node "./ul/li" #'get-rating-for-player)))
     (if (not (or (equal hero-class "h-common") (equal hero-class "h-doct") (equal hero-class "h-adorn")))
         (list
          (cons "name" (make-human-readable-hero-class hero-class))
-         (cons "data" (map-on-node-by-xpath node "./ul/li" #'get-rating-for-player))))))
+         (cons "data" data-items)
+         (cons "mean" (calculate-mean data-items))
+         (cons "mean-last" (calculate-mean-for-last 20 data-items))))))
     
 (defun collect-ratings (html-page)
   "From the raw HTML text gets ratings list"
