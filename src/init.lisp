@@ -20,8 +20,8 @@
       (:p "Данная программа скачивает рейтинги игроков в Prime World со страницы http://ru.playpw.com/ratings.html и отображает их в виде графиков. Опираясь на высоту графика относительно остальных, теоретически, можно судить об эффективности данного персонажа. Таким образом, персонаж, чей график рейтинга ниже всех остальных &#8212; дно. :)")
       
       (:ul :class "pages-toggler-wrapper"
-           (:li :class "pages-toggler" :data-target "container" (:button "Посмотреть графики"))
-           (:li :class "pages-toggler" :data-target "meanvalues" (:button "Посмотреть средние значения рейтинга")))
+           (:li (:button :class "pages-toggler" :data-target "container" "Посмотреть графики"))
+           (:li (:button :class "pages-toggler" :data-target "meanvalues" "Посмотреть средние значения рейтинга")))
       
       (:div :id "container" :class "page"
             (:img :id "loading-icon" :src "/assets/loading.gif")

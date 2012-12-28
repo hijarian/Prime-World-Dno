@@ -16,4 +16,15 @@
 
 .pages-toggler-wrapper {
     display: none;
+    list-style-type: none;
+    overflow: hidden;
+}
+
+.pages-toggler-wrapper li {
+    float: left;
+    width: 50%;
+}
+
+.page#meanvalues {
+    display: none;
 }

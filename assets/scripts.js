@@ -32,43 +32,87 @@ function fillRatingsTable(data) {
     table_contents += '</tbody>';
 
     table.append(table_contents);
-    table.dataTable();
+    table.dataTable({
+        iDisplayLength: 60,
+        aaSorting: [[ 2, "desc" ]]
+    });
 }
 
 
-function makeChartWithData (data) {
+function makeChartWithData (data) 
+{
     new Highcharts.Chart({
-	chart:{
+	chart:
+        {
 	    renderTo:'container',
 	    marginBottom:25,
 	    zoomType: 'xy',
             ignoreHiddenSeries: false,
-            reflow: false
+            reflow: false,
+            events: 
+            {
+                load: selectAllSeries
+            }
 	},
-	title:{
+	title: 
+        {
 	    text:'Кто дно?'
 	},
-	subtitle:{
-	    text:'Source: http://ru.playpw.com/ratings.html'
+	subtitle: 
+        {
+	    text:'Стырено с: http://ru.playpw.com/ratings.html'
 	},
-	yAxis:{
-	    title:{
-		text:'Rating'
+        xAxis:
+        {
+            title:
+            {
+                text: 'Место'
+            },
+            tickInterval: 2
+        },
+	yAxis:
+        {
+	    title: 
+            {
+		text:'Рейтинг'
 	    },
-	    plotLines:[{
+	    plotLines:
+            [{
 		value:0,
 		width:1,
 		color:'#808080'
 	    }]
 	},
-	tooltip:{
+        plotOptions: 
+        {
+            line: 
+            {
+                showCheckbox: true,
+                events:
+                {
+                    click: filterSingleSerie
+                }
+            },
+            series: 
+            {
+                events: 
+                {
+                    checkboxClick: toggleSingleSerie,
+                    legendItemClick: filterSingleSerie
+                }
+            }
+        },
+	tooltip: 
+        {
             shared: false,
-	    formatter: function () {
+	    formatter: function () 
+            {
 		return '<b>' + this.series.name + '</b><br/>'
 		    + this.x + ' место: ' + this.y + ' очков.';
 	    }
 	},
-	legend:{
+	legend: 
+        {
             enabled: true,
 	    layout:'vertical',
 	    align:'right',
@@ -77,4 +121,68 @@ function makeChartWithData (data) {
 	},
 	series: data
     });
+
+    function filterSingleSerie(event) 
+    {
+        var chosenSerie = this.index;
+        var series = this.chart.series;
+        
+        if (this.visible && this.hasOwnProperty('onlyItShown') && this.onlyItShown)
+        {
+            showAllSeries(series);
+        }
+        else
+        {
+            hideAllSeriesExceptOne(series, chosenSerie);
+        }
+        
+        return false;
+
+        function showAllSeries(series)
+        {
+            for (var i = 0; i < series.length; ++i) 
+            {
+                series[i].onlyItShown = false;
+                series[i].show();
+                series[i].select(true);
+            }
+        }
+
+        function hideAllSeriesExceptOne(series, chosenSerieIndex)
+        {
+            for (var i = 0; i < series.length; ++i) 
+            {
+                if (series[i].index == chosenSerieIndex) 
+                {
+                    series[i].onlyItShown = true;
+                    series[i].show();
+                    series[i].select(true);
+                }
+                else 
+                {
+                    series[i].onlyItShown = false;
+                    series[i].hide();
+                    series[i].select(false);
+                }
+            }
+        }
+    }
+
+    function toggleSingleSerie(event) 
+    {
+        if (this.visible) {
+            this.hide();
+            this.select(false);
+        } else {
+            this.show();
+            this.select(true);
+        }
+        return false;
+    }
+
+    function selectAllSeries(event) {
+        for (var i = 0; i < this.series.length; ++i) {
+            this.series[i].select(true);
+        }
+    }
 }
