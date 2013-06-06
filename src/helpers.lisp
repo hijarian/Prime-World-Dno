@@ -1,19 +1,6 @@
-;;;; helpers.lisp
-;;; Various helper functions to use through the codebase
-
+; helpers.lisp
+; Various helper functions to use through the codebase
 (in-package :dno)
-
-;;; CL-EMB TEMPLATES HELPERS BEGIN
-(defun get-root-directory ()
-  "Core helper to get the root directory of application in runtime"
-  (merge-pathnames (make-pathname :defaults "")))
-
-(defun make-template-pathname (template-filename)
-  "Helper to create pathnames for template files. All templates lie in `src/templates` directory."
-  (merge-pathnames (make-pathname :directory '(:relative "src" "templates") :defaults template-filename)
-                   (get-root-directory)))
-
-;-------------------------------------------------------------------------------
 
 ;;; HUNCHENTOOT ASSETS PUBLISHING HELPERS BEGIN
 (defun publish-directory (uri dirname)
@@ -24,7 +11,6 @@
 (defun publish-file (uri filename)
   (push (hunchentoot:create-static-file-dispatcher-and-handler uri filename)
         hunchentoot:*dispatch-table*))
- 
 
 (defun publish-webroot-file (webroot-dirname webroot-filename)
   "Makes file under the <webroot-dirname> directory in the root application directory accessible under the URI in root of web-app."
@@ -39,8 +25,6 @@
      in webroot-files
      doing (publish-webroot-file webroot-dirname webroot-filename)))
 ;;; HUNCHENTOOT ASSETS PUBLISHING HELPERS END
-
-;-------------------------------------------------------------------------------
 
 ;;; XPATH HELPERS BEGIN
 (defun map-on-node-by-xpath (node xpath functor)

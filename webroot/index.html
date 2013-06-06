@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Кто дно?</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+    <script src="http://code.highcharts.com/modules/exporting.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css" />
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
+  <body>
+    <h1>Кто дно?</h1>
+    <p>Данная программа скачивает рейтинги игроков в Prime World со страницы http://ru.playpw.com/ratings.html и отображает их в виде графиков. Опираясь на высоту графика относительно остальных, теоретически, можно судить об эффективности данного персонажа. Таким образом, персонаж, чей график рейтинга ниже всех остальных &#8212; дно. :)</p>
+    
+    <ul class="pages-toggler-wrapper">
+      <li class="pages-toggler" data-target="container">
+        <button>Посмотреть графики</button>
+      </li>
+      <li class="pages-toggler" data-target="meanvalues">
+        <button>Посмотреть средние значения рейтинга</button>
+      </li>
+    </ul>
+
+    <div id="container" class="page">
+      <img id="loading-icon" src="/assets/loading.gif" />
+      <h2 id="loading-header">Загрузка данных...</h2>
+    </div>
+
+    <div id="meanvalues" class="page">
+      <table id="meanvalues-list">
+        <thead>
+          <tr>
+            <th>Имя персонажа</th>
+            <th>Средний рейтинг</th>
+            <th>Средний рейтинг без учёта первых 5 мест</th>
+          </tr>
+        </thead>
+      </table>
+      
+      <script src="/assets/scripts.js"></script>
+  </body>
+</html>
+      
+    
+                 

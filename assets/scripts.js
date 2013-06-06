@@ -18,6 +18,7 @@ $(function () {
     });
 });
 
+
 function fillRatingsTable(data) {
     var table = $('#meanvalues-list');
     var table_contents = '<tbody>';
@@ -39,29 +40,28 @@ function fillRatingsTable(data) {
 }
 
 
-function makeChartWithData (data) 
-{
+function makeChartWithData (data) {
     new Highcharts.Chart({
-	chart:
+        chart:
         {
-	    renderTo:'container',
-	    marginBottom:25,
-	    zoomType: 'xy',
+            renderTo:'container',
+            marginBottom:25,
+            zoomType: 'xy',
             ignoreHiddenSeries: false,
             reflow: false,
             events: 
             {
                 load: selectAllSeries
             }
-	},
-	title: 
+        },
+        title: 
         {
-	    text:'Кто дно?'
-	},
-	subtitle: 
+            text:'Кто дно?'
+        },
+        subtitle: 
         {
-	    text:'Стырено с: http://ru.playpw.com/ratings.html'
-	},
+            text:'Стырено с: http://ru.playpw.com/ratings.html'
+        },
         xAxis:
         {
             title:
@@ -70,19 +70,19 @@ function makeChartWithData (data)
             },
             tickInterval: 2
         },
-	yAxis:
+        yAxis:
         {
-	    title: 
+            title: 
             {
-		text:'Рейтинг'
-	    },
-	    plotLines:
+                text:'Рейтинг'
+            },
+            plotLines:
             [{
-		value:0,
-		width:1,
-		color:'#808080'
-	    }]
-	},
+                value:0,
+                width:1,
+                color:'#808080'
+            }]
+        },
         plotOptions: 
         {
             line: 
@@ -102,64 +102,53 @@ function makeChartWithData (data)
                 }
             }
         },
-	tooltip: 
+        tooltip: 
         {
             shared: false,
-	    formatter: function () 
+            formatter: function () 
             {
-		return '<b>' + this.series.name + '</b><br/>'
-		    + this.x + ' место: ' + this.y + ' очков.';
-	    }
-	},
-	legend: 
+                return '<b>' + this.series.name + '</b><br/>'
+                    + this.x + ' место: ' + this.y + ' очков.';
+            }
+        },
+        legend: 
         {
             enabled: true,
-	    layout:'vertical',
-	    align:'right',
-	    verticalAlign:'top',
-	    y: 100,
-	},
-	series: data
+            layout:'vertical',
+            align:'right',
+            verticalAlign:'top',
+            y: 100,
+        },
+        series: data
     });
 
-    function filterSingleSerie(event) 
-    {
+    function filterSingleSerie(event) {
         var chosenSerie = this.index;
         var series = this.chart.series;
         
-        if (this.visible && this.hasOwnProperty('onlyItShown') && this.onlyItShown)
-        {
+        if (this.visible && this.hasOwnProperty('onlyItShown') && this.onlyItShown) {
             showAllSeries(series);
-        }
-        else
-        {
+        } else {
             hideAllSeriesExceptOne(series, chosenSerie);
         }
         
         return false;
 
-        function showAllSeries(series)
-        {
-            for (var i = 0; i < series.length; ++i) 
-            {
+        function showAllSeries(series) {
+            for (var i = 0; i < series.length; ++i) {
                 series[i].onlyItShown = false;
                 series[i].show();
                 series[i].select(true);
             }
         }
 
-        function hideAllSeriesExceptOne(series, chosenSerieIndex)
-        {
-            for (var i = 0; i < series.length; ++i) 
-            {
-                if (series[i].index == chosenSerieIndex) 
-                {
+        function hideAllSeriesExceptOne(series, chosenSerieIndex) {
+            for (var i = 0; i < series.length; ++i) {
+                if (series[i].index == chosenSerieIndex) {
                     series[i].onlyItShown = true;
                     series[i].show();
                     series[i].select(true);
-                }
-                else 
-                {
+                } else {
                     series[i].onlyItShown = false;
                     series[i].hide();
                     series[i].select(false);
@@ -168,8 +157,7 @@ function makeChartWithData (data)
         }
     }
 
-    function toggleSingleSerie(event) 
-    {
+    function toggleSingleSerie(event) {
         if (this.visible) {
             this.hide();
             this.select(false);

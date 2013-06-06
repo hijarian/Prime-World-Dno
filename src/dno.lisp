@@ -1,8 +1,12 @@
-;;; dno.lisp
+; dno.lisp
+; Processing of the ratings webpage on Prime World website and converting them to JSON
 
 (in-package #:dno)
 
-(defparameter *ratings-xpath* 
+(defparameter *origin-website*
+  "http://ru.playpw.com/ratings.html")
+
+(defparameter *ratings-xpath*
   "//div[@class='b-ratinglist__i2']/div[contains(concat(' ', @class, ' '), ' b-ratings ')]")
 
 (defparameter *class-names*
@@ -70,25 +74,27 @@
 (setf (gethash "koroleva_fey" *class-names*) "Королева фей")
 (setf (gethash "witchera" *class-names*) "Ведьмак")
 (setf (gethash "demonolog" *class-names*) "Демонолог")
+(setf (gethash "vampir" *class-names*) "Вампир")
+(setf (gethash "akshar" *class-names*) "Акшар")
 
 (defun make-human-readable-hero-class (hero-class)
   (or (gethash hero-class *class-names*) hero-class))
 
 (defun get-hero-class (subnode)
   (string-trim " "
-               (cl-ppcre:regex-replace-all "b-ratings-?" 
-                                           (xtree:attribute-value subnode "class") 
+               (cl-ppcre:regex-replace-all "b-ratings-?"
+                                           (xtree:attribute-value subnode "class")
                                            "")))
 
 (defun get-rating-for-player (subnode)
   "Accepts the DOM element with data about single player standing, player name and rating"
-  (list 
+  (list
    (cons "name" (xpath:find-string subnode "./em[contains(concat(' ', @class, ' '), ' nickname ')]"))
    (cons "x"    (parse-integer (xpath:find-string subnode "./b")))
    (cons "y"    (parse-integer (remove-if-not #'alphanumericp (xpath:find-string subnode "./span"))))))
 
 (defun get-field-from-point (field-name point-definition)
-  (cdr (assoc field-name point-definition))) 
+  (cdr (assoc field-name point-definition)))
 
 (defun get-y-field-from-point (point-definition)
   (get-field-from-point "y" point-definition))
@@ -98,7 +104,7 @@
   (let ((elements-count (length data))
         (elements-sum (reduce #'+ data)))
     (coerce (/ elements-sum elements-count) 'float)))
-  
+
 (defun calculate-mean (data)
   "Calculate average between the every y field from the given alist"
   (let ((elements (mapcar #'get-y-field-from-point data)))
@@ -117,25 +123,27 @@
          (cons "data" data-items)
          (cons "mean" (calculate-mean data-items))
          (cons "mean-last" (calculate-mean-for-last 20 data-items))))))
-    
+
 (defun collect-ratings (html-page)
   "From the raw HTML text gets ratings list"
   (remove-if #'null (map-on-xpath html-page *ratings-xpath* #'get-ratings-for-hero)))
 
 
-;; MAIN 
+;; MAIN
 (defun get-ratings-page ()
-  (drakma:http-request "http://ru.playpw.com/ratings.html"))
+  (drakma:http-request *origin-website*))
 
 (defun ratings-to-json (ratings)
   (json:encode-json-to-string ratings))
 
 (defun send-data-from-origin-as-json ()
+  "Main function to grab ratings from Prime World website and convert them to JSON.
+Returns JSON data readable by Highcharts"
   (let ((page (get-ratings-page)))
     (ratings-to-json (collect-ratings page))))
 
 
-;;; WRITING TO FILE
+;;; WRITING TO FILE (unused in webapp, used for manual testing)
 (defun write-ratings-str-to-file (ratings-str outfile)
   (with-open-file (output (merge-pathnames outfile) :direction :output :if-exists :supersede :if-does-not-exist :create)
     (write-line ratings-str output)))
@@ -143,14 +151,6 @@
 (defun write-ratings-to-file (outfile)
   "Auxiliary function to debug"
   (let ((page (get-ratings-page)))
-    (write-ratings-str-to-file 
+    (write-ratings-str-to-file
      (ratings-to-json (collect-ratings page))
      outfile)))
-
-
-
-
-
-
-
-
