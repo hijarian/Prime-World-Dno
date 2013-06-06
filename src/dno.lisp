@@ -89,7 +89,9 @@
 (defun get-rating-for-player (subnode)
   "Accepts the DOM element with data about single player standing, player name and rating"
   (list
-   (cons "name" (xpath:find-string subnode "./em[contains(concat(' ', @class, ' '), ' nickname ')]"))
+   (cons "name" (string-trim 
+                 '(#\Space #\Newline #\Return #\Linefeed #\Tab) 
+                 (xpath:find-string subnode "./em[contains(concat(' ', @class, ' '), ' nickname ')]")))
    (cons "x"    (parse-integer (xpath:find-string subnode "./b")))
    (cons "y"    (parse-integer (remove-if-not #'alphanumericp (xpath:find-string subnode "./span"))))))
 
