@@ -1,9 +1,7 @@
 ; helpers.lisp
-; Various helper functions to use through the codebase
+; Helper functions for use in codebase.
+; Only Hunchentoot publishers for now.
 (in-package :dno)
-
-;-------------------------------------------------------------------------------
-; Hunchentoot
 
 (defun publish-directory (uri dirname)
   "Makes files in given <dirname> accessible under the URL prefix <uri>. <dirname> should be in relative directory path format, e. g. \"foo/bar/baz\""
@@ -19,20 +17,4 @@
   `(hunchentoot:define-easy-handler (,name :uri ,uri) ,params 
      (setf (hunchentoot:content-type*) "application/json")
      ,@body))
-
-;-------------------------------------------------------------------------------
-; XPath
-
-(defun map-on-node-by-xpath (node xpath functor)
-  "Apply functor to every node gotten by xpath on the node given"
-  (iterate:iter (iterate:for subnode 
-                             in-xpath-result 
-                             xpath
-                             on node)
-                (iterate:collect (funcall functor subnode))))
-
-(defun map-on-xpath (html xpath functor)
-  "Map functor onto all nodes matched by xpath in given html text"
-  (html:with-parse-html (document html)
-    (map-on-node-by-xpath document xpath functor)))
 

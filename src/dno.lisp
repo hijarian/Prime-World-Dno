@@ -80,6 +80,20 @@
 (defun make-human-readable-hero-class (hero-class)
   (or (gethash hero-class *class-names*) hero-class))
 
+(defun map-on-node-by-xpath (node xpath functor)
+  "Apply functor to every node gotten by xpath on the node given"
+  (iterate:iter (iterate:for subnode 
+                             in-xpath-result 
+                             xpath
+                             on node)
+                (iterate:collect (funcall functor subnode))))
+
+(defun map-on-xpath (html xpath functor)
+  "Map functor onto all nodes matched by xpath in given html text"
+  (html:with-parse-html (document html)
+    (map-on-node-by-xpath document xpath functor)))
+
+
 (defun get-hero-class (subnode)
   (string-trim " "
                (cl-ppcre:regex-replace-all "b-ratings-?"
