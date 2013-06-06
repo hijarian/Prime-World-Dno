@@ -2,7 +2,9 @@
 ; Various helper functions to use through the codebase
 (in-package :dno)
 
-;;; HUNCHENTOOT ASSETS PUBLISHING HELPERS BEGIN
+;-------------------------------------------------------------------------------
+; Hunchentoot
+
 (defun publish-directory (uri dirname)
   "Makes files in given <dirname> accessible under the URL prefix <uri>. <dirname> should be in relative directory path format, e. g. \"foo/bar/baz\""
   (push (hunchentoot:create-folder-dispatcher-and-handler uri dirname)
@@ -12,21 +14,15 @@
   (push (hunchentoot:create-static-file-dispatcher-and-handler uri filename)
         hunchentoot:*dispatch-table*))
 
-(defun publish-webroot-file (webroot-dirname webroot-filename)
-  "Makes file under the <webroot-dirname> directory in the root application directory accessible under the URI in root of web-app."
-  (push (hunchentoot:create-static-file-dispatcher-and-handler 
-         (format NIL "/~A" webroot-filename)
-         (format NIL "~A/~A" webroot-dirname webroot-filename))
-        hunchentoot:*dispatch-table*))
+(defmacro publish-ajax-endpoint (uri name params &body body)
+  "<name> is a name of handler function, <uri> is a relative URI for endpoint, <params> is a list of symbol names of expected params in request>"
+  `(hunchentoot:define-easy-handler (,name :uri ,uri) ,params 
+     (setf (hunchentoot:content-type*) "application/json")
+     ,@body))
 
-(defun publish-webroot-file-list (webroot-dirname webroot-files)
-  (loop 
-     for webroot-filename 
-     in webroot-files
-     doing (publish-webroot-file webroot-dirname webroot-filename)))
-;;; HUNCHENTOOT ASSETS PUBLISHING HELPERS END
+;-------------------------------------------------------------------------------
+; XPath
 
-;;; XPATH HELPERS BEGIN
 (defun map-on-node-by-xpath (node xpath functor)
   "Apply functor to every node gotten by xpath on the node given"
   (iterate:iter (iterate:for subnode 
@@ -39,5 +35,4 @@
   "Map functor onto all nodes matched by xpath in given html text"
   (html:with-parse-html (document html)
     (map-on-node-by-xpath document xpath functor)))
-;;; XPATH HELPERS END
 

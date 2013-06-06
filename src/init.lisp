@@ -5,18 +5,14 @@
 ;; Webroot
 (publish-file "/" "webroot/index.html")
 
-;; All CSS and JS files referenced from webroot file
+;; Favicon, just because
+(publish-file "/favicon.ico" "webroot/favicon.ico")
+
+;; Images, CSS and JS files referenced from index.html
 (publish-directory "/assets/" "assets/")
 
-;; Now the pain in the ass: we cannot just do (publish-directory "/" "webroot"),
-;; because it will break webapp root URL completely (and published files will not be accessible, too)
-;; So, we will publish then one-by-one.
-(publish-webroot-file-list "webroot" '("favicon.ico" "robots.txt" "crossdomain.xml")) 
-
 ;; AJAX endpoint to grab data to display in chart
-(hunchentoot:define-easy-handler (data :uri "/data") ()
-  (setf (hunchentoot:content-type*) "application/json")
-  (send-data-from-origin-as-json))
+(publish-ajax-endpoint "/data" data () (send-data-from-origin-as-json))
 
 (defun run ()
   "Launch Hunchentoot web server instance on default port"
