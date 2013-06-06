@@ -9,5 +9,4 @@
 (ql:quickload :dno)
 
 ;; Now you can call (dno:run) and your server will run
-
 (dno:run)
