@@ -4,7 +4,7 @@
 
 (print ">>> Building system....")
 
-(load (make-pathname :directory *build-dir* :defaults "dno.asd"))
+(load (merge-pathnames *build-dir* "dno.asd"))
 
 (ql:quickload :dno)
 
