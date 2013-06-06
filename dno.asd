@@ -1,4 +1,4 @@
-;;;; dno.asd
+; dno.asd
 
 (asdf:defsystem #:dno
     :serial t
@@ -10,10 +10,7 @@
                  #:cl-libxml2
                  #:iterate
                  #:cl-json
-                 #:hunchentoot
-                 #:parenscript
-                 #:cl-who
-                 #:css-lite)
+                 #:hunchentoot)
     :components ((:file "package")
                  (:module :src
                           :serial t
